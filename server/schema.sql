@@ -10,6 +10,12 @@ CREATE TABLE messages (
   PRIMARY KEY(id)
 )
 
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(20) NOT NULL,
+  PRIMARY KEY(id)
+);
+
 /*
 CREATE TABLE messages (
   //  remove here and create your message table
