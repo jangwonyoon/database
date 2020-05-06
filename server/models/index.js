@@ -13,20 +13,19 @@ module.exports = {
       });
     },
     post: function ({ username, text, roomname }, callback) {
-      db.query(
-        `INSERT INTO messages(username, text, roomname) VALUES ('${username}', "${text}", '${roomname}')`,
-        (error) => {
-          if (error) {
-            callback(error);
-          }
-          db.query("SELECT MAX(id) AS id FROM messages", (err, data) => {
-            if (err) {
-              callback(err);
-            }
-            callback(null, data);
-          });
+      let sql = `INSERT INTO messages(username, text, roomname) VALUES (?,?,?)`;
+      let params = [username, text, roomname];
+      db.query(sql, params, (error) => {
+        if (error) {
+          callback(error);
         }
-      );
+        db.query("SELECT * FROM messages", params, (err, data) => {
+          if (err) {
+            callback(err);
+          }
+          callback(null, data);
+        });
+      });
     },
   },
   // 잔디 확인
@@ -42,11 +41,13 @@ module.exports = {
       });
     },
     post: function ({ username }, callback) {
-      db.query(`INSERT INTO users(username) VALUES('${username}')`, (error) => {
+      let sql = `INSERT INTO users(username) VALUES(?)`;
+      let params = [username];
+      db.query(sql, params, (error) => {
         if (error) {
           callback(error);
         }
-        db.query("SELECT MAX(id) AS id FROM users", (err, data) => {
+        db.query("SELECT * FROM users", params, (err, data) => {
           if (err) {
             callback(err);
           }
