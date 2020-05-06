@@ -1,55 +1,80 @@
 /* eslint-disable no-console */
 var db = require("../db");
+var Sequelize = require("sequelize");
 
-module.exports = {
-  messages: {
-    get: function () {
-      return new Promise((resolve, reject) => {
-        db.query("SELECT * FROM messages", (error, data) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(data);
-        });
-      });
-    },
-    post: function ({ username, text, roomname }) {
-      let sql = `INSERT INTO messages(username, text, roomname) VALUES (?,?,?)`;
-      let params = [username, text, roomname];
-      return new Promise((resolve, reject) => {
-        db.query(sql, params, (error) => {
-          if (error) reject(error);
-          db.query("SELECT * FROM messages", params, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-          });
-        });
-      });
-    },
+var messages = db.define(
+  "messages",
+  {
+    username: Sequelize.STRING,
+    text: Sequelize.STRING,
+    roomname: Sequelize.STRING,
   },
+  {
+    timestamps: false,
+  }
+);
 
-  users: {
-    // Ditto as above.
-    get: function () {
-      return new Promise((resolve, reject) => {
-        db.query("SELECT * FROM users", (error, data) => {
-          if (error) reject(error);
+var users = db.define(
+  "users",
+  {
+    username: Sequelize.STRING,
+  },
+  { timestamps: false }
+);
+
+const msg = {
+  get: async function () {
+    return new Promise((resolve, reject) => {
+      messages
+        .findAll()
+        .catch((err) => {
+          reject(err);
+        })
+        .then((data) => {
           resolve(data);
         });
-      });
-    },
-    post: function ({ username }) {
-      let sql = `INSERT INTO users(username) VALUES(?)`;
-      let params = [username];
-      return new Promise((resolve, reject) => {
-        db.query(sql, params, (error) => {
-          if (error) reject(error);
-          db.query("SELECT * FROM users", params, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-          });
+    });
+  },
+  post: function ({ username, text, roomname }) {
+    return new Promise((resolve, reject) => {
+      messages
+        .create({ username: username, text: text, roomname: roomname })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
         });
-      });
-    },
+    });
   },
 };
+
+const usr = {
+  // Ditto as above.
+  get: function () {
+    return new Promise((resolve, reject) => {
+      users
+        .findAll()
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+  post: function ({ username }) {
+    return new Promise((resolve, reject) => {
+      users
+        .create({ username: username })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+};
+
+module.exports = { usr, msg };

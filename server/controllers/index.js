@@ -5,12 +5,12 @@ var models = require("../models");
 module.exports = {
   messages: {
     get: async function (req, res) {
-      await models.messages.get().then((data) => {
+      await models.msg.get().then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
     post: async function (req, res) {
-      await models.messages.post(req.body).then((data) => {
+      await models.msg.post(req.body).then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
@@ -18,12 +18,12 @@ module.exports = {
 
   users: {
     get: async function (req, res) {
-      await models.users.get().then((data) => {
+      await models.usr.get().then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
     post: async function (req, res) {
-      await models.users.post(req.body).then((data) => {
+      await models.usr.post(req.body).then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },

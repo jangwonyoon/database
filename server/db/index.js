@@ -1,4 +1,7 @@
-const mysql = require("mysql");
+/* eslint-disable no-console */
+// const mysql = require("mysql");
+
+const Sequelize = require("sequelize");
 
 // process.env로 시작하는 모든 변수들은 환경 변수(environmental variables)입니다.
 // 환경 변수는 터미널에서 다음 명령을 이용하여 설정할 수 있습니다.
@@ -7,13 +10,28 @@ const password = process.env.DATABASE_SPRINT_PASSWORD;
 
 const host = "localhost";
 
-var db = mysql.createConnection({
+// sequelize 연결
+
+const db = new Sequelize("chat", "root", password, {
   host: host,
-  user: "root",
-  password: password,
-  database: "chat",
+  dialect: "mysql",
 });
-db.connect();
+
+// var db = mysql.createConnection({
+//   host: host,
+//   user: "root",
+//   password: password,
+//   database: "chat",
+// });
+// db.connect();
+
+db.authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
 module.exports = db;
 
