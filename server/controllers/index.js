@@ -4,38 +4,26 @@ var models = require("../models");
 
 module.exports = {
   messages: {
-    get: function (req, res) {
-      models.messages.get((error, data) => {
-        if (error) {
-          res.send(error);
-        }
+    get: async function (req, res) {
+      await models.messages.get().then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
-    post: function (req, res) {
-      models.messages.post(req.body, (error, data) => {
-        if (error) {
-          res.send(error);
-        }
+    post: async function (req, res) {
+      await models.messages.post(req.body).then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
   },
 
   users: {
-    get: function (req, res) {
-      models.users.get((error, data) => {
-        if (error) {
-          res.send(error);
-        }
+    get: async function (req, res) {
+      await models.users.get().then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
-    post: function (req, res) {
-      models.users.post(req.body, (error, data) => {
-        if (error) {
-          res.send(error);
-        }
+    post: async function (req, res) {
+      await models.users.post(req.body).then((data) => {
         res.status(200).send(JSON.stringify(data));
       });
     },
