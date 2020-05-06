@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* You'll need to have MySQL running and your Node server running
  * for these tests to pass. */
 
